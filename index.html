@@ -1,0 +1,1238 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SRTI — Sistema de Respuesta Técnica Inteligente | Leistung Solutions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+/* ════════════════════════════════════════
+   RESET & VARIABLES
+════════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+
+:root{
+  --navy:    #0C1F35;
+  --navy-m:  #1A3355;
+  --navy-l:  #264D7A;
+  --gold:    #C9A84C;
+  --gold-l:  #E8C96A;
+  --gold-dim: rgba(201,168,76,.15);
+  --cream:   #EDE8DC;
+  --cream-l: #F7F5F0;
+  --steel:   #4A5C72;
+  --mist:    #F0F3F7;
+  --white:   #FFFFFF;
+  --success: #2A6E42;
+  --border:  rgba(12,31,53,.08);
+  --border-gold: rgba(201,168,76,.22);
+  --shadow-sm: 0 2px 12px rgba(12,31,53,.07);
+  --shadow:    0 4px 24px rgba(12,31,53,.1);
+  --shadow-lg: 0 8px 40px rgba(12,31,53,.14);
+  --radius:  10px;
+}
+
+body{
+  font-family:'DM Sans',sans-serif;
+  background:var(--mist);
+  color:var(--navy);
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+/* ════════════════════════════════════════
+   HEADER
+════════════════════════════════════════ */
+header{
+  background:var(--navy);
+  height:62px;
+  padding:0 2rem;
+  display:flex;align-items:center;justify-content:space-between;
+  border-bottom:2px solid var(--gold);
+  position:sticky;top:0;z-index:200;
+  box-shadow:0 2px 24px rgba(0,0,0,.35);
+}
+.logo{display:flex;align-items:center;gap:12px;}
+.logo-mark{
+  width:38px;height:38px;
+  background:linear-gradient(135deg,var(--gold),var(--gold-l));
+  border-radius:7px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'Playfair Display',serif;
+  font-size:1.05rem;font-weight:700;color:var(--navy);
+  letter-spacing:-.5px;
+}
+.logo-info{}
+.logo-name{
+  font-family:'Playfair Display',serif;
+  font-size:1.15rem;font-weight:700;color:var(--cream);
+  letter-spacing:.3px;line-height:1;
+}
+.logo-sub{
+  font-size:.58rem;color:var(--gold);
+  letter-spacing:2px;text-transform:uppercase;
+  font-weight:500;margin-top:.15rem;
+}
+.header-r{display:flex;align-items:center;gap:.75rem;}
+.live-badge{
+  display:flex;align-items:center;gap:.4rem;
+  background:rgba(42,110,66,.2);
+  border:1px solid rgba(42,110,66,.4);
+  color:#4ADE80;
+  padding:.28rem .75rem;border-radius:20px;
+  font-size:.62rem;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;
+}
+.live-dot{
+  width:6px;height:6px;border-radius:50%;
+  background:#4ADE80;
+  animation:pulse 2s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.btn-reset{
+  background:transparent;
+  border:1px solid var(--border-gold);
+  color:var(--gold);padding:.3rem .85rem;
+  border-radius:6px;font-size:.7rem;
+  font-family:'DM Sans',sans-serif;
+  cursor:pointer;letter-spacing:1px;text-transform:uppercase;
+  transition:all .18s;
+}
+.btn-reset:hover{background:var(--gold-dim);}
+
+/* ════════════════════════════════════════
+   LAYOUT
+════════════════════════════════════════ */
+.shell{
+  display:grid;
+  grid-template-columns:390px 1fr;
+  min-height:calc(100vh - 62px);
+}
+
+/* ════════════════════════════════════════
+   LEFT PANEL
+════════════════════════════════════════ */
+.left{
+  background:var(--navy);
+  padding:1.75rem 1.5rem 2rem;
+  overflow-y:auto;
+  border-right:1px solid rgba(201,168,76,.12);
+  display:flex;flex-direction:column;gap:1.4rem;
+}
+
+.sec-title{
+  font-size:.58rem;color:var(--gold);
+  letter-spacing:2.5px;text-transform:uppercase;font-weight:600;
+  margin-bottom:.6rem;
+  display:flex;align-items:center;gap:.5rem;
+}
+.sec-title::after{
+  content:'';flex:1;height:1px;
+  background:linear-gradient(to right,rgba(201,168,76,.25),transparent);
+}
+
+/* ── AREA CARDS ── */
+.area-grid{display:grid;grid-template-columns:1fr 1fr;gap:.45rem;}
+.area-card{
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(201,168,76,.12);
+  border-radius:8px;padding:.7rem .55rem;
+  cursor:pointer;transition:all .15s;
+  text-align:center;user-select:none;
+}
+.area-card:hover{background:rgba(255,255,255,.08);border-color:rgba(201,168,76,.3);}
+.area-card.on{
+  background:rgba(201,168,76,.13);
+  border-color:var(--gold);
+  box-shadow:0 0 0 1px rgba(201,168,76,.2) inset;
+}
+.ac-icon{font-size:1.3rem;margin-bottom:.25rem;display:block;}
+.ac-name{
+  font-size:.67rem;color:rgba(237,232,220,.7);
+  font-weight:500;line-height:1.3;
+}
+.area-card.on .ac-name{color:var(--gold-l);}
+
+/* ── FORMAT BTNS ── */
+.fmt-row{display:flex;gap:.4rem;}
+.fmt-btn{
+  flex:1;padding:.55rem .25rem;
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(201,168,76,.12);
+  border-radius:7px;
+  color:rgba(237,232,220,.6);
+  font-size:.67rem;font-weight:600;
+  font-family:'DM Sans',sans-serif;
+  cursor:pointer;transition:all .15s;
+  text-align:center;
+}
+.fmt-btn:hover{background:rgba(255,255,255,.08);}
+.fmt-btn.on{
+  background:rgba(201,168,76,.18);
+  border-color:var(--gold);color:var(--gold-l);
+}
+.fmt-btn-icon{display:block;font-size:1.05rem;margin-bottom:.2rem;}
+
+/* ── INPUTS ── */
+.ctx-input{
+  width:100%;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(201,168,76,.18);
+  color:var(--cream);
+  font-family:'DM Sans',sans-serif;font-size:.8rem;
+  padding:.55rem .8rem;border-radius:7px;
+  outline:none;transition:border-color .2s,background .2s;
+}
+.ctx-input::placeholder{color:rgba(237,232,220,.28);}
+.ctx-input:focus{border-color:var(--gold);background:rgba(255,255,255,.08);}
+
+.q-ta{
+  width:100%;
+  background:rgba(255,255,255,.05);
+  border:1px solid rgba(201,168,76,.18);
+  color:var(--cream);
+  font-family:'DM Sans',sans-serif;font-size:.82rem;
+  padding:.75rem .85rem;border-radius:8px;
+  outline:none;resize:none;min-height:120px;
+  transition:border-color .2s,background .2s;
+  line-height:1.65;
+}
+.q-ta::placeholder{color:rgba(237,232,220,.28);}
+.q-ta:focus{border-color:var(--gold);background:rgba(255,255,255,.08);}
+.q-hint{font-size:.62rem;color:rgba(237,232,220,.28);margin-top:.35rem;text-align:right;}
+
+/* ── GEN BUTTON ── */
+.btn-gen{
+  width:100%;
+  background:linear-gradient(135deg,var(--gold) 0%,var(--gold-l) 100%);
+  color:var(--navy);
+  font-family:'DM Sans',sans-serif;font-weight:700;font-size:.87rem;
+  padding:.88rem;border:none;border-radius:8px;
+  cursor:pointer;letter-spacing:.4px;text-transform:uppercase;
+  transition:transform .15s,box-shadow .15s,opacity .15s;
+  position:relative;overflow:hidden;
+}
+.btn-gen::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,transparent 40%,rgba(255,255,255,.15));
+}
+.btn-gen:hover{transform:translateY(-1px);box-shadow:0 6px 22px rgba(201,168,76,.45);}
+.btn-gen:active{transform:none;}
+.btn-gen:disabled{opacity:.35;cursor:not-allowed;transform:none;}
+
+/* ── EXAMPLES ── */
+.examples{display:flex;flex-direction:column;gap:.3rem;}
+.eg{
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(201,168,76,.09);
+  border-radius:6px;padding:.42rem .65rem;
+  font-size:.67rem;color:rgba(237,232,220,.45);
+  cursor:pointer;transition:all .15s;line-height:1.45;
+}
+.eg:hover{
+  background:rgba(255,255,255,.07);
+  color:rgba(237,232,220,.8);
+  border-color:rgba(201,168,76,.28);
+}
+
+/* ════════════════════════════════════════
+   RIGHT PANEL
+════════════════════════════════════════ */
+.right{
+  overflow-y:auto;
+  background:var(--mist);
+  padding:1.75rem 2rem;
+}
+
+/* ── EMPTY ── */
+.empty{
+  height:100%;min-height:calc(100vh - 100px);
+  display:flex;flex-direction:column;
+  align-items:center;justify-content:center;
+  gap:1.1rem;text-align:center;padding:3rem;
+}
+.e-icon{font-size:3.8rem;opacity:.2;}
+.e-title{
+  font-family:'Playfair Display',serif;
+  font-size:1.7rem;color:var(--navy-m);opacity:.35;
+}
+.e-sub{
+  font-size:.85rem;max-width:400px;
+  line-height:1.8;color:var(--steel);opacity:.7;
+}
+.e-steps{
+  display:flex;gap:2rem;margin-top:.75rem;
+  flex-wrap:wrap;justify-content:center;
+}
+.e-step{display:flex;flex-direction:column;align-items:center;gap:.35rem;}
+.e-num{
+  width:30px;height:30px;border-radius:50%;
+  background:rgba(12,31,53,.06);
+  display:flex;align-items:center;justify-content:center;
+  font-size:.8rem;font-weight:700;color:var(--navy-m);
+}
+.e-label{font-size:.7rem;color:var(--steel);opacity:.65;max-width:90px;text-align:center;}
+
+/* ── LOADER ── */
+.loader-wrap{
+  display:none;flex-direction:column;
+  align-items:center;justify-content:center;
+  min-height:calc(100vh - 120px);gap:1.1rem;
+  padding:3rem;text-align:center;
+}
+.loader-wrap.on{display:flex;}
+.spinner{
+  width:46px;height:46px;
+  border:3px solid rgba(201,168,76,.18);
+  border-top-color:var(--gold);
+  border-radius:50%;
+  animation:spin .7s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loader-msg{font-size:.85rem;color:var(--steel);min-height:1.2em;}
+.expert-pills{display:flex;gap:.4rem;flex-wrap:wrap;justify-content:center;margin-top:.4rem;}
+.ep{
+  background:rgba(12,31,53,.06);
+  border:1px solid rgba(12,31,53,.1);
+  border-radius:20px;padding:.22rem .65rem;
+  font-size:.63rem;color:var(--navy-m);font-weight:500;
+}
+
+/* ── RESULTS ── */
+.results{display:none;}
+.results.on{display:block;}
+
+/* Summary bar */
+.summary-bar{
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:.9rem 1.25rem;
+  display:flex;gap:1.5rem;
+  margin-bottom:1.25rem;
+  box-shadow:var(--shadow-sm);
+  flex-wrap:wrap;
+}
+.sb-item{flex:1;min-width:80px;}
+.sb-lbl{font-size:.58rem;color:var(--steel);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:.18rem;}
+.sb-val{font-size:.83rem;font-weight:600;color:var(--navy);}
+.sb-val.gold{color:var(--gold);}
+
+/* Tabs */
+.tabs{
+  display:flex;gap:0;
+  border-bottom:2px solid var(--border);
+  margin-bottom:1.4rem;
+}
+.tab{
+  padding:.52rem 1.1rem;
+  font-size:.7rem;font-weight:600;
+  letter-spacing:.5px;text-transform:uppercase;
+  color:var(--steel);cursor:pointer;
+  border-bottom:2px solid transparent;
+  margin-bottom:-2px;transition:all .15s;
+  white-space:nowrap;
+}
+.tab.on{color:var(--navy);border-bottom-color:var(--gold);}
+.tab:hover:not(.on){color:var(--navy-m);}
+.tab-pane{display:none;}
+.tab-pane.on{display:block;}
+
+/* Card */
+.card{
+  background:var(--white);
+  border-radius:var(--radius);
+  border:1px solid var(--border);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+  margin-bottom:1.25rem;
+  animation:fadeUp .28s ease both;
+}
+@keyframes fadeUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.card:nth-child(1){animation-delay:.03s}
+.card:nth-child(2){animation-delay:.08s}
+.card:nth-child(3){animation-delay:.13s}
+
+.card-head{
+  background:var(--navy);
+  padding:.78rem 1.2rem;
+  display:flex;align-items:center;gap:.6rem;
+}
+.ch-icon{font-size:1rem;}
+.ch-title{
+  font-family:'Playfair Display',serif;
+  color:var(--cream);font-size:.88rem;
+}
+.ch-badge{
+  margin-left:auto;
+  background:var(--gold);color:var(--navy);
+  font-size:.58rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  padding:.15rem .55rem;border-radius:10px;
+}
+.card-body{padding:1.25rem;}
+
+/* ── RESPONSE SECTIONS ── */
+.sec-block{margin-bottom:1.2rem;}
+.sec-block:last-child{margin-bottom:0;}
+.sec-bar{
+  display:flex;align-items:center;gap:.45rem;
+  margin-bottom:.55rem;
+  padding-bottom:.38rem;
+  border-bottom:1px solid rgba(12,31,53,.05);
+}
+.sec-em{font-size:.95rem;}
+.sec-lbl{
+  font-size:.62rem;font-weight:700;
+  letter-spacing:1.8px;text-transform:uppercase;
+}
+.sec-text{
+  font-size:.83rem;color:#2A3A4A;
+  line-height:1.8;
+}
+.sec-text strong{color:var(--navy);font-weight:600;}
+.sec-text code{
+  background:rgba(12,31,53,.06);
+  padding:.08rem .3rem;border-radius:3px;
+  font-family:'DM Mono',monospace;font-size:.85em;
+  color:var(--navy-m);
+}
+.sec-text br+br{margin-top:.4rem;display:block;content:'';}
+
+/* Lock-in block */
+.lockin{
+  background:linear-gradient(135deg,rgba(12,31,53,.03),rgba(201,168,76,.05));
+  border:1px solid var(--border-gold);
+  border-left:4px solid var(--gold);
+  border-radius:0 8px 8px 0;
+  padding:.85rem 1rem;
+  margin-top:.6rem;
+}
+.lockin-lbl{
+  font-size:.6rem;color:var(--gold);
+  letter-spacing:1.8px;text-transform:uppercase;font-weight:700;
+  margin-bottom:.3rem;display:flex;align-items:center;gap:.3rem;
+}
+.lockin-text{font-size:.8rem;color:var(--navy);line-height:1.7;}
+
+/* ── WHATSAPP TAB ── */
+.wa-wrap{
+  background:#F0FDF4;
+  border:1px solid #BBF7D0;
+  border-radius:9px;
+  padding:1.25rem;
+}
+.wa-pre{
+  font-family:'DM Sans',sans-serif;
+  font-size:.85rem;color:#14532D;
+  line-height:1.8;white-space:pre-wrap;word-break:break-word;
+}
+.wa-hint{
+  font-size:.65rem;color:#15803D;
+  letter-spacing:1px;text-transform:uppercase;font-weight:700;
+  margin-bottom:.75rem;display:flex;align-items:center;gap:.4rem;
+}
+
+/* ── PRODUCT TAB ── */
+.prod-card{
+  border:1px solid var(--border);
+  border-radius:9px;overflow:hidden;
+  margin-bottom:.75rem;
+}
+.pc-head{
+  background:linear-gradient(135deg,var(--navy),var(--navy-m));
+  padding:.72rem 1rem;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.pc-name{font-family:'Playfair Display',serif;color:var(--cream);font-size:.93rem;}
+.pc-line{
+  background:var(--gold);color:var(--navy);
+  font-size:.58rem;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  padding:.15rem .55rem;border-radius:10px;white-space:nowrap;
+}
+.pc-body{padding:1rem;background:var(--white);}
+.pc-spec{
+  display:flex;align-items:flex-start;gap:.6rem;
+  margin-bottom:.35rem;font-size:.77rem;
+}
+.pc-spec-k{
+  min-width:90px;font-size:.6rem;color:var(--steel);
+  letter-spacing:1.2px;text-transform:uppercase;font-weight:600;
+  margin-top:.05rem;
+}
+.pc-spec-v{
+  font-family:'DM Mono',monospace;font-size:.73rem;
+  color:var(--navy-m);font-weight:500;line-height:1.5;
+}
+.pc-just{
+  font-size:.8rem;color:var(--steel);
+  line-height:1.65;margin-top:.7rem;
+  padding-top:.6rem;border-top:1px solid var(--border);
+}
+
+/* ── ACTION TAB ── */
+.steps{display:flex;flex-direction:column;gap:.55rem;}
+.step-row{
+  display:grid;grid-template-columns:auto 1fr;gap:.8rem;
+  background:var(--cream-l);border-radius:8px;padding:.85rem;
+  border-left:3px solid var(--gold);
+}
+.step-num{
+  width:24px;height:24px;border-radius:50%;
+  background:var(--navy);color:var(--gold);
+  font-size:.7rem;font-weight:700;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;margin-top:.08rem;
+}
+.step-lbl{font-size:.6rem;color:var(--gold);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:.22rem;}
+.step-txt{font-size:.82rem;color:var(--navy);line-height:1.65;}
+
+/* Action row */
+.act-row{display:flex;gap:.55rem;margin-top:.85rem;}
+.btn-act{
+  flex:1;padding:.58rem;border-radius:8px;
+  font-family:'DM Sans',sans-serif;font-size:.73rem;font-weight:600;
+  cursor:pointer;transition:all .15s;
+  letter-spacing:.3px;text-transform:uppercase;border:none;
+}
+.btn-copy{background:var(--navy);color:var(--cream);}
+.btn-copy2{background:#15803D;color:#fff;}
+.btn-print{background:var(--cream-l);color:var(--navy);border:1px solid var(--border);}
+.btn-act:hover{opacity:.82;transform:translateY(-1px);}
+
+/* Error */
+.err-box{
+  background:#FEF2F2;border:1px solid #FECACA;
+  border-radius:8px;padding:1rem;
+  font-size:.82rem;color:#991B1B;line-height:1.7;
+}
+
+/* ════════════════════════════════════════
+   PRINT
+════════════════════════════════════════ */
+@media print{
+  header,.left{display:none}
+  .shell{display:block}
+  .right{padding:1rem}
+  .tabs,.act-row{display:none!important}
+  .tab-pane{display:block!important}
+  .card{box-shadow:none;border:1px solid #ddd}
+}
+
+/* ════════════════════════════════════════
+   RESPONSIVE
+════════════════════════════════════════ */
+@media(max-width:900px){
+  .shell{grid-template-columns:1fr}
+  .left{min-height:auto}
+  .area-grid{grid-template-columns:repeat(3,1fr)}
+  .e-steps{gap:1rem}
+}
+</style>
+</head>
+<body>
+
+<!-- ════════════ HEADER ════════════ -->
+<header>
+  <div class="logo">
+    <div class="logo-mark">LS</div>
+    <div class="logo-info">
+      <div class="logo-name">SRTI</div>
+      <div class="logo-sub">Sistema de Respuesta Técnica Inteligente · Leistung Solutions</div>
+    </div>
+  </div>
+  <div class="header-r">
+    <div class="live-badge">
+      <div class="live-dot"></div>IA Activa
+    </div>
+    <button class="btn-reset" onclick="resetAll()">↺ Nueva</button>
+  </div>
+</header>
+
+<div class="shell">
+
+  <!-- ════════════ LEFT PANEL ════════════ -->
+  <div class="left">
+
+    <!-- Área -->
+    <div>
+      <div class="sec-title">🧬 Área de Especialidad</div>
+      <div class="area-grid">
+        <div class="area-card" onclick="selArea(this,'masterbatch')">
+          <span class="ac-icon">🧪</span>
+          <div class="ac-name">Masterbatch & Aditivos</div>
+        </div>
+        <div class="area-card" onclick="selArea(this,'extrusion')">
+          <span class="ac-icon">⚙️</span>
+          <div class="ac-name">Extrusión & Proceso</div>
+        </div>
+        <div class="area-card" onclick="selArea(this,'empaque')">
+          <span class="ac-icon">📦</span>
+          <div class="ac-name">Empaque Flexible</div>
+        </div>
+        <div class="area-card" onclick="selArea(this,'agricola')">
+          <span class="ac-icon">🌿</span>
+          <div class="ac-name">Plásticos Agrícolas</div>
+        </div>
+        <div class="area-card" onclick="selArea(this,'pvc')">
+          <span class="ac-icon">🔧</span>
+          <div class="ac-name">PVC & Formulaciones</div>
+        </div>
+        <div class="area-card" onclick="selArea(this,'calidad')">
+          <span class="ac-icon">🔬</span>
+          <div class="ac-name">Calidad & Auditoría</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Formato -->
+    <div>
+      <div class="sec-title">📤 Formato de Respuesta</div>
+      <div class="fmt-row">
+        <button class="fmt-btn on" onclick="selFmt(this,'whatsapp')">
+          <span class="fmt-btn-icon">💬</span>WhatsApp
+        </button>
+        <button class="fmt-btn" onclick="selFmt(this,'email')">
+          <span class="fmt-btn-icon">📧</span>Email
+        </button>
+        <button class="fmt-btn" onclick="selFmt(this,'propuesta')">
+          <span class="fmt-btn-icon">📋</span>Propuesta
+        </button>
+      </div>
+    </div>
+
+    <!-- Contexto -->
+    <div>
+      <div class="sec-title">📎 Contexto del Cliente</div>
+      <input type="text" class="ctx-input" id="inp-ctx"
+        placeholder="Ej: planta en GDL, extruyen LDPE, 1 extrusora, turno continuo...">
+    </div>
+
+    <!-- Pregunta -->
+    <div>
+      <div class="sec-title">💬 Pregunta del Cliente</div>
+      <textarea class="q-ta" id="inp-q" oninput="chkBtn()"
+        placeholder="Pega aquí exactamente lo que preguntó el cliente...
+
+Ej: 'Tengo mucha presión en el cabezal y se me cae el globo, ¿qué hago?'"></textarea>
+      <div class="q-hint">Ctrl+Enter para generar</div>
+    </div>
+
+    <!-- Botón -->
+    <button class="btn-gen" id="btn-gen" onclick="generar()" disabled>
+      🧠 Generar Respuesta Técnica →
+    </button>
+
+    <!-- Ejemplos -->
+    <div>
+      <div class="sec-title">💡 Consultas de Ejemplo</div>
+      <div class="examples">
+        <div class="eg" onclick="loadEg(0)">⚙️ "Tengo mucha presión en el cabezal y se me cae el globo"</div>
+        <div class="eg" onclick="loadEg(1)">🧪 "¿Cuánto % de negro necesito para opacidad total en 25 micras?"</div>
+        <div class="eg" onclick="loadEg(2)">📦 "Mi sellado se abre en frío, ¿qué aditivo me recomiendas?"</div>
+        <div class="eg" onclick="loadEg(3)">🌿 "¿Qué diferencia real hay entre el difusor de luz y un film transparente?"</div>
+        <div class="eg" onclick="loadEg(4)">🔧 "Tengo migración del plastificante en mis tubos PVC de riego"</div>
+        <div class="eg" onclick="loadEg(5)">🔬 "Tengo gel conteo alto y no identifico la fuente, ¿cómo analizo?"</div>
+      </div>
+    </div>
+
+  </div><!-- /left -->
+
+  <!-- ════════════ RIGHT PANEL ════════════ -->
+  <div class="right" id="right">
+
+    <!-- Empty state -->
+    <div class="empty" id="empty">
+      <div class="e-icon">🏭</div>
+      <div class="e-title">Asesor Técnico Industrial</div>
+      <div class="e-sub">Cualquier ejecutivo Leistung puede responder como un equipo de ingenieros con 40+ años de experiencia. Selecciona el área, el formato y pega la pregunta.</div>
+      <div class="e-steps">
+        <div class="e-step"><div class="e-num">1</div><div class="e-label">Selecciona área técnica</div></div>
+        <div class="e-step"><div class="e-num">2</div><div class="e-label">Elige formato de respuesta</div></div>
+        <div class="e-step"><div class="e-num">3</div><div class="e-label">Pega la pregunta del cliente</div></div>
+        <div class="e-step"><div class="e-num">4</div><div class="e-label">Ajusta tono y envía</div></div>
+      </div>
+    </div>
+
+    <!-- Loader -->
+    <div class="loader-wrap" id="loader">
+      <div class="spinner"></div>
+      <div class="loader-msg" id="lmsg">Activando equipo técnico...</div>
+      <div class="expert-pills">
+        <div class="ep">🧪 Formulador</div>
+        <div class="ep">⚙️ Ing. Extrusión</div>
+        <div class="ep">🔬 Auditor Calidad</div>
+        <div class="ep">💰 Asesor Comercial</div>
+        <div class="ep">🌿 Esp. Agrícola</div>
+      </div>
+    </div>
+
+    <!-- Results -->
+    <div class="results" id="results">
+
+      <!-- Summary -->
+      <div class="summary-bar">
+        <div class="sb-item"><div class="sb-lbl">Área</div><div class="sb-val" id="sb-area">—</div></div>
+        <div class="sb-item"><div class="sb-lbl">Formato</div><div class="sb-val" id="sb-fmt">—</div></div>
+        <div class="sb-item"><div class="sb-lbl">Nivel</div><div class="sb-val">Director de Planta</div></div>
+        <div class="sb-item"><div class="sb-lbl">ADN</div><div class="sb-val gold">Leistung 40+</div></div>
+      </div>
+
+      <!-- Tabs -->
+      <div class="tabs">
+        <div class="tab on" onclick="swTab('resp',this)">📋 Respuesta</div>
+        <div class="tab" onclick="swTab('wa',this)">💬 Script Listo</div>
+        <div class="tab" onclick="swTab('prod',this)">🧪 Producto</div>
+        <div class="tab" onclick="swTab('acc',this)">⚡ Acción</div>
+      </div>
+
+      <!-- Tab: Respuesta -->
+      <div class="tab-pane on" id="tab-resp">
+        <div class="card">
+          <div class="card-head">
+            <span class="ch-icon">🏭</span>
+            <span class="ch-title">Respuesta Técnica — Nivel Experto Leistung</span>
+            <span class="ch-badge" id="ch-badge">TÉCNICO</span>
+          </div>
+          <div class="card-body" id="res-body">—</div>
+        </div>
+        <div class="act-row">
+          <button class="btn-act btn-copy" onclick="copyResp()">📋 Copiar Respuesta</button>
+          <button class="btn-act btn-print" onclick="window.print()">🖨 Imprimir</button>
+        </div>
+      </div>
+
+      <!-- Tab: WhatsApp -->
+      <div class="tab-pane" id="tab-wa">
+        <div class="card">
+          <div class="card-head">
+            <span class="ch-icon">💬</span>
+            <span class="ch-title">Script Listo para WhatsApp</span>
+            <span class="ch-badge">LISTO PARA ENVIAR</span>
+          </div>
+          <div class="card-body">
+            <div class="wa-wrap">
+              <div class="wa-hint">✅ Ajusta el nombre del cliente y envía</div>
+              <div class="wa-pre" id="wa-txt">—</div>
+            </div>
+            <div class="act-row">
+              <button class="btn-act btn-copy2" onclick="copyWA()">💬 Copiar para WhatsApp</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab: Producto -->
+      <div class="tab-pane" id="tab-prod">
+        <div class="card">
+          <div class="card-head">
+            <span class="ch-icon">🧪</span>
+            <span class="ch-title">Producto Leistung Recomendado</span>
+            <span class="ch-badge">LOCK-IN</span>
+          </div>
+          <div class="card-body" id="prod-body">—</div>
+        </div>
+      </div>
+
+      <!-- Tab: Acción -->
+      <div class="tab-pane" id="tab-acc">
+        <div class="card">
+          <div class="card-head">
+            <span class="ch-icon">⚡</span>
+            <span class="ch-title">Plan de Acción Comercial</span>
+            <span class="ch-badge">MITOI</span>
+          </div>
+          <div class="card-body">
+            <div class="steps" id="steps">—</div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /results -->
+  </div><!-- /right -->
+</div><!-- /shell -->
+
+<script>
+/* ════════════════════════════════════════════════════════════
+   STATE
+════════════════════════════════════════════════════════════ */
+let S = { area: '', fmt: 'whatsapp', q: '', ctx: '' };
+let lastRaw = '';
+
+/* ════════════════════════════════════════════════════════════
+   EXAMPLES
+════════════════════════════════════════════════════════════ */
+const EGS = [
+  { area: 'extrusion',    q: 'Tengo mucha presión en el cabezal y se me cae el globo. Ya bajé la velocidad pero no mejora. ¿Qué puede estar pasando y cómo lo soluciono?' },
+  { area: 'masterbatch',  q: '¿Cuánto porcentaje de masterbatch negro necesito para opacidad total en una película de 25 micras extruida con LDPE? Y ¿cómo verifico que no pasa luz?' },
+  { area: 'empaque',      q: 'Mi sellado se abre en frío cuando el consumidor jala la bolsa. Trabajo con PE/PE sellado térmico a 140°C. ¿Qué aditivo me recomiendas y en qué porcentaje?' },
+  { area: 'agricola',     q: '¿Qué diferencia real hay en campo entre usar el difusor de luz agrícola y una película transparente convencional para macrotúnel? ¿Vale la pena la inversión?' },
+  { area: 'pvc',          q: 'Tengo migración del plastificante en mis tubos de PVC para riego agrícola. Con el calor del verano se ponen pegajosos. ¿Qué formulación me recomiendas para solucionar esto?' },
+  { area: 'calidad',      q: 'Tengo gel conteo alto en mi película y no logro identificar la fuente. Proceso LDPE con 3% de masterbatch negro. ¿Cómo diagnostico el origen y qué acciones tomo?' },
+];
+
+function loadEg(i) {
+  const e = EGS[i];
+  document.getElementById('inp-q').value = e.q;
+  S.q = e.q;
+  const cards = document.querySelectorAll('.area-card');
+  const MAP = { masterbatch:0, extrusion:1, empaque:2, agricola:3, pvc:4, calidad:5 };
+  cards.forEach(c => c.classList.remove('on'));
+  if (MAP[e.area] !== undefined) cards[MAP[e.area]].classList.add('on');
+  S.area = e.area;
+  chkBtn();
+}
+
+/* ════════════════════════════════════════════════════════════
+   UI
+════════════════════════════════════════════════════════════ */
+function selArea(el, a) {
+  document.querySelectorAll('.area-card').forEach(c => c.classList.remove('on'));
+  el.classList.add('on'); S.area = a; chkBtn();
+}
+function selFmt(el, f) {
+  document.querySelectorAll('.fmt-btn').forEach(b => b.classList.remove('on'));
+  el.classList.add('on'); S.fmt = f;
+}
+function chkBtn() {
+  S.q = document.getElementById('inp-q').value.trim();
+  document.getElementById('btn-gen').disabled = !S.q;
+}
+function swTab(id, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('on'));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('on'));
+  el.classList.add('on');
+  document.getElementById('tab-'+id).classList.add('on');
+}
+function resetAll() {
+  S = { area:'', fmt:'whatsapp', q:'', ctx:'' };
+  document.getElementById('inp-q').value = '';
+  document.getElementById('inp-ctx').value = '';
+  document.querySelectorAll('.area-card').forEach(c => c.classList.remove('on'));
+  document.querySelectorAll('.fmt-btn').forEach(b => b.classList.remove('on'));
+  document.querySelector('.fmt-btn').classList.add('on');
+  document.getElementById('btn-gen').disabled = true;
+  document.getElementById('empty').style.display = 'flex';
+  document.getElementById('loader').classList.remove('on');
+  document.getElementById('results').classList.remove('on');
+  swTab('resp', document.querySelector('.tab'));
+}
+
+/* ════════════════════════════════════════════════════════════
+   LABELS
+════════════════════════════════════════════════════════════ */
+const AREA_LBL = {
+  masterbatch:'Masterbatch & Aditivos',
+  extrusion:'Extrusión & Proceso',
+  empaque:'Empaque Flexible',
+  agricola:'Plásticos Agrícolas',
+  pvc:'PVC & Formulaciones',
+  calidad:'Calidad & Auditoría',
+  '':'General',
+};
+const FMT_LBL = { whatsapp:'WhatsApp', email:'Email Técnico', propuesta:'Propuesta Completa' };
+
+/* ════════════════════════════════════════════════════════════
+   SYSTEM PROMPT BUILDER
+════════════════════════════════════════════════════════════ */
+function buildSys() {
+  const a = S.area || 'general';
+  const FMT_INST = {
+    whatsapp:`
+FORMATO WHATSAPP — REGLAS ESTRICTAS:
+- Máximo 200 palabras en total.
+- Sin headers markdown (sin ###). Texto corrido con saltos de línea.
+- Párrafos cortos (máximo 2-3 líneas cada uno).
+- Emojis con moderación (máximo 5 en todo el mensaje).
+- Tono: colega técnico experto, cercano y seguro.
+- Terminar SIEMPRE con una pregunta que invite a continuar (visita técnica, envío de muestra, llamada de 15 min).`,
+    email:`
+FORMATO EMAIL TÉCNICO:
+- Usa la estructura completa de 5 secciones con sus headers (###).
+- Tono formal pero accesible. Incluye especificaciones numéricas.
+- 400-600 palabras. Termina con propuesta concreta de siguiente paso.`,
+    propuesta:`
+FORMATO PROPUESTA COMERCIAL:
+- Usa estructura completa de 5 secciones + LOCK-IN.
+- Incluye argumento ROI cuantificado (cuánto pierde el cliente sin resolver esto vs cuánto cuesta el producto Leistung).
+- Menciona producto Leistung específico con código o referencia.
+- Cierra con propuesta de lote piloto. 600-900 palabras.`,
+  };
+
+  return `Eres el equipo técnico senior de Leistung Solutions — empresa mexicana B2B distribuidora de masterbatch, aditivos y materias primas plásticas. Sede: Guadalajara, Jalisco. Clientes: convertidores industriales.
+
+EXPERTISE (40+ años de experiencia combinada del equipo):
+• Diseño de masterbatch: negro (carbón), blanco (TiO2 rutilo/anatasa), colores, UV HALS, difusor de luz agrícola exclusivo, antiestático, IR térmico
+• Extrusión: soplado de película (blown film globo), cast film plano, coextrusión multicapa A/B/C, laminación, soplado de recipientes
+• Empaques flexibles: estructuras multicapa, sellado heat-seal, fricción COF, WVTR/OTR, impresión flexo/rotogravure
+• Plásticos agrícolas: acolchado mulch (mono/bicapa/tricapa), macrotúnel, invernadero, microtúnel, geomembrana HDPE, bolsas hidropónicas, silaje
+• Resinas y compatibilidad: LDPE, LLDPE C4/C6/C8, HDPE, PP homo/co, EVA, EVOH, blends y mezclas, degradabilidad
+• Problemas de proceso: tapado de mallas, gel conteo, rasgaduras, burbujas, presión excesiva, inestabilidad de burbuja, ondulación, bloqueo de bobinas
+• PVC: compuestos plastificados DOP/DINP, rígidos, espumados (sin resina base)
+• Auditoría: control estadístico de proceso, Cpk, análisis de rechazo, trazabilidad de lotes
+
+PORTAFOLIO LEISTUNG:
+→ Apariencia: MB blanco TiO2 rutilo (alta opacidad, rutilo premium) y anatasa (económico), MB negro carbón alta pureza, pigmentos orgánicos/inorgánicos
+→ Funcionalidad: UV HALS (Tinuvin 622/770, Chimassorb 944/981), antioxidante primario Irganox 1010/1076, antioxidante secundario Irgafos 168, estabilizadores térmicos, DIFUSOR DE LUZ AGRÍCOLA LSCPA-77571 (EXCLUSIVO LEISTUNG), antigoteo agrícola (monoglicéridos), antifog
+→ Procesabilidad: slip erucamida/oleamida (grado industrial), antiblock SiO2 amorfo D50 3-5µ, agentes nucleantes, compatibilizadores, procesadores de extrusión
+→ PVC: formulaciones completas plastificadas/rígidas/espumadas
+→ Materias primas: LDPE virgen, LLDPE C4, PP, copolímeros
+
+PRODUCTO DIFERENCIADOR CLAVE:
+Código: LSCPA-77571 | Nombre: Difusor de Luz Agrícola Leistung
+Función: convierte radiación solar directa en luz difusa dentro del film agrícola (blown film, capa núcleo)
+Incorporación: 4-5% en capa núcleo de estructura multicapa
+Haze documentado: >85% (ASTM D1003)
+Resultados reales en campo:
+  - +10 a +15% rendimiento de cosecha (fresa, tomate, chile, pepino)
+  - >10.5°Brix en fresa (vs 9.0-10.0°Brix sin difusor)
+  - Distribución uniforme de luz en dosel completo — todas las hojas fotosíntesis activa, no solo las superiores
+  - Eliminación de quemadura de hoja por fotones concentrados
+  - Vida útil: 2-3 temporadas con UV HALS reforzado
+Competencia directa: Granic® (GCR Group, España) distribuido por Entec Polymers México
+Ventaja Leistung: granulometría de partícula controlada → distribución de luz más uniforme, menor variabilidad lote a lote
+
+CLIENTE TIPO LEISTUNG:
+Convertidor industrial con 30-100 empleados. Compra 3-20 ton/mes de MB + aditivos. No consumidor final. Director técnico o jefe de planta con 10-15 años de experiencia. Valora: respaldo técnico, consistencia de lote, tiempo de respuesta, documentación.
+
+ÁREA ACTIVA: ${AREA_LBL[a]}
+${FMT_INST[S.fmt]}
+
+ESTRUCTURA OBLIGATORIA (usar siempre estos headers exactos con el emoji):
+### 🔍 DIAGNÓSTICO
+[Problema real — no el síntoma superficial]
+
+### ⚙️ CAUSA RAÍZ
+[Mecanismo físico/químico real: qué ocurre en el polímero o en la máquina]
+
+### 🛠️ SOLUCIÓN TÉCNICA
+[Acciones concretas con especificaciones numéricas: temperaturas °C, velocidades rpm, presiones bar, % de aditivos]
+
+### 📊 IMPACTO ESPERADO
+[Mejoras cuantificables: % de reducción de scrap, horas de malla, kg/h producción, ciclos de vida]
+
+### ✅ RECOMENDACIÓN LEISTUNG
+[Producto/servicio Leistung específico con código/nombre + cómo validar — muestra, piloto, análisis]
+
+### 🔒 LOCK-IN TÉCNICO
+[Por qué el cliente que trabaja con Leistung en este problema genera una barrera de salida real — dependencia técnica positiva]
+
+REGLAS:
+- Nunca vago. Siempre con datos numéricos cuando aplique.
+- Si se necesita prueba de laboratorio: ofrecerla (respaldo UdG Polímeros + Leistung).
+- Nunca descalificar al cliente. Empatía técnica siempre.
+- Si el difusor LSCPA-77571 es relevante: mencionarlo explícitamente con código.
+- Responder al nivel de un director técnico — profundo pero entendible.
+- Terminar siempre con call-to-action específico.`;
+}
+
+/* ════════════════════════════════════════════════════════════
+   PARSE RESPONSE
+════════════════════════════════════════════════════════════ */
+function parse(txt) {
+  const out = { diagnostico:'', causaRaiz:'', solucion:'', impacto:'', recomendacion:'', lockin:'' };
+  const HEADS = [
+    { k:'diagnostico',   marks:['🔍 DIAGNÓSTICO','DIAGNÓSTICO'] },
+    { k:'causaRaiz',     marks:['⚙️ CAUSA RAÍZ','CAUSA RAÍZ'] },
+    { k:'solucion',      marks:['🛠️ SOLUCIÓN TÉCNICA','SOLUCIÓN TÉCNICA','SOLUCIÓN'] },
+    { k:'impacto',       marks:['📊 IMPACTO ESPERADO','IMPACTO ESPERADO','IMPACTO'] },
+    { k:'recomendacion', marks:['✅ RECOMENDACIÓN LEISTUNG','RECOMENDACIÓN LEISTUNG','RECOMENDACIÓN'] },
+    { k:'lockin',        marks:['🔒 LOCK-IN TÉCNICO','LOCK-IN','LOCK-IN TÉCNICO'] },
+  ];
+  let cur = null;
+  const collected = {};
+  for (const line of txt.split('\n')) {
+    let hit = false;
+    for (const {k, marks} of HEADS) {
+      if (marks.some(m => line.toUpperCase().includes(m.toUpperCase()))) {
+        cur = k; collected[k] = []; hit = true; break;
+      }
+    }
+    if (!hit && cur) collected[cur].push(line);
+  }
+  for (const k in collected) out[k] = collected[k].join('\n').trim();
+  // Fallback: no structure detected
+  const hasAny = Object.values(out).some(v => v.length > 20);
+  if (!hasAny) out.diagnostico = txt;
+  return out;
+}
+
+/* ════════════════════════════════════════════════════════════
+   RENDER MARKDOWN (simple)
+════════════════════════════════════════════════════════════ */
+function md(txt) {
+  if (!txt) return '<em style="color:#999">—</em>';
+  return txt
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/`(.+?)`/g, '<code>$1</code>')
+    .replace(/^[-•] (.+)$/gm, '• $1')
+    .replace(/\n\n/g, '<br><br>')
+    .replace(/\n/g, '<br>');
+}
+
+/* ════════════════════════════════════════════════════════════
+   RENDER RESULTS
+════════════════════════════════════════════════════════════ */
+const SECS = [
+  { k:'diagnostico',   em:'🔍', lbl:'Diagnóstico',         color:'#C9A84C' },
+  { k:'causaRaiz',     em:'⚙️', lbl:'Causa Raíz',           color:'#3B82F6' },
+  { k:'solucion',      em:'🛠️', lbl:'Solución Técnica',     color:'#16A34A' },
+  { k:'impacto',       em:'📊', lbl:'Impacto Esperado',     color:'#9333EA' },
+  { k:'recomendacion', em:'✅', lbl:'Recomendación Leistung',color:'#C9A84C' },
+];
+
+const PROD_DATA = {
+  masterbatch:[
+    { nombre:'Masterbatch Negro Carbón — Alta Pureza', linea:'MB Negro',
+      specs:[['Carbono en MB','40-50%'],['Incorporación mínima opacidad total','2.5-3.0% en 25µ'],['Proceso base','LDPE/LLDPE blown film']],
+      just:'El negro carbón de alta pureza de Leistung da opacidad total a <3% de incorporación. Menor costo por kg de plástico procesado que la competencia. Formulado para mínima contaminación de malla.' },
+    { nombre:'UV HALS Masterbatch — Sistema Dual', linea:'MB Funcional',
+      specs:[['Base activa','Chimassorb 944 + Tinuvin 622'],['Incorporación','0.5-1.2%'],['Vida útil garantizada','2-4 años exterior']],
+      just:'Sistema UV HALS de Leistung calibrado para condiciones de radiación UV de México — hasta 7,000 langleys anuales en el Bajío. Evita la fragilización prematura del film y el craqueo superficial.' },
+  ],
+  extrusion:[
+    { nombre:'Slip + Antiblock Combinado LSP-100', linea:'Procesabilidad',
+      specs:[['Erucamida grado industrial','0.05-0.15%'],['SiO2 amorfo D50 3-5µ','0.10-0.25%'],['COF objetivo superficial','< 0.20'],['Ventana migración','24-48h post-extrusión']],
+      just:'El aditivo combinado de Leistung está prebalanceado para extrusión LDPE/LLDPE. Erucamida grado alimenticio migra de forma controlada sin sobre-acumulación en malla. Resuelve tapado de cabezal y defectos de COF en una sola incorporación.' },
+    { nombre:'Sistema Antioxidante Dual LSA-200', linea:'Procesabilidad',
+      specs:[['AO primario Irganox 1010','0.08-0.12%'],['AO secundario Irgafos 168','0.15-0.20%'],['Ratio estándar','1:2 primario/secundario'],['Temperatura proceso','hasta 230°C estable']],
+      just:'El sistema dual AO de Leistung estabiliza el polímero en el procesamiento a alta temperatura. Reduce la degradación térmica que genera geles, puntos negros y tapado de mallas. Especialmente crítico en reciclado o resinas de alto MI.' },
+  ],
+  empaque:[
+    { nombre:'Slip Erucamida Alta Pureza LSE-98', linea:'Procesabilidad',
+      specs:[['Pureza erucamida','≥ 98%'],['Incorporación PE/PP','0.05-0.12%'],['COF dinámico objetivo','0.15-0.25'],['Tiempo de migración','24-72h según temperatura']],
+      just:'La erucamida ≥98% de pureza migra de forma controlada y uniforme a la superficie. Resuelve el sellado insuficiente por exceso de slip y el COF irregular en líneas de empaque de alta velocidad. Compatible con impresión corona.' },
+    { nombre:'Antiblock SiO2 Amorfo LSB-50', linea:'Procesabilidad',
+      specs:[['D50 partícula','3-5 micras'],['Incorporación LDPE','0.10-0.20%'],['Haze mínimo añadido','<2% en 25µ'],['Compatibilidad','LDPE, LLDPE, PP']],
+      just:'El SiO2 amorfo de granulometría controlada de Leistung da separación perfecta de capas sin opacidad visible — crítico para empaques transparentes de alto nivel de presentación.' },
+  ],
+  agricola:[
+    { nombre:'Difusor de Luz Agrícola LSCPA-77571', linea:'Agrícola BRIX',
+      specs:[['Incorporación','4-5% en capa núcleo'],['Haze documentado','>85% (ASTM D1003)'],['Efecto en campo','+10-15% cosecha'],['Brix fresa','>10.5°Brix documentado'],['Vida útil film','2-3 temporadas']],
+      just:'EXCLUSIVO LEISTUNG. El único difusor de luz agrícola en México con resultados documentados en campo. Compite directamente con Granic (GCR Group / Entec) con precio más competitivo y granulometría controlada — distribución de luz más uniforme en todo el dosel. No disponible en mercado abierto.' },
+    { nombre:'UV HALS Agrícola Reforzado LSUV-A', linea:'Agrícola',
+      specs:[['Base activa','Chimassorb 944 + Tinuvin 783'],['Incorporación film','0.6-1.0%'],['Resistencia UV MJ/m²','>2,000 MJ/m²'],['Compatibilidad','LDPE, LLDPE, EVA']],
+      just:'El UV HALS agrícola de Leistung está formulado para las condiciones de campo mexicano — alta radiación UV, exposición continua 6-8 meses/año. Extiende vida útil del film de 1 a 2-3 temporadas reduciendo el costo de plástico por hectárea.' },
+  ],
+  pvc:[
+    { nombre:'Formulación PVC Plastificado FPV-300', linea:'PVC Completo',
+      specs:[['Plastificante base','DINP (Diisononil ftalato) o DOP'],['Estabilizador','Ca/Zn libre de plomo'],['Fórmula entregada','Completa sin resina base'],['Ajuste personalizado','Dureza, temperatura, color']],
+      just:'Leistung entrega la formulación PVC completa calibrada para el proceso específico del convertidor — sin necesidad de que el cliente desarrolle la fórmula internamente. Estabilizadores Pb-free conformes con regulaciones actuales.' },
+  ],
+  calidad:[
+    { nombre:'Servicio de Auditoría Técnica LSA-01', linea:'Servicios',
+      specs:[['Alcance','Formulación + proceso + proveedores'],['Entregable','Informe con Cpk, pareto de fallas, propuesta de corrección'],['Respaldo','Universidad de Guadalajara — Lab Polímeros'],['Tiempo típico','5-10 días hábiles']],
+      just:'El equipo técnico de Leistung + UdG Polímeros audita la formulación y proceso actuales del convertidor. Identifica la fuente de geles, inestabilidad, rechazo de calidad. Entregable con análisis estadístico y propuesta de optimización concreta.' },
+  ],
+};
+
+function renderRes(parsed, raw, area, fmt) {
+  // Summary bar
+  document.getElementById('sb-area').textContent = AREA_LBL[area] || 'General';
+  document.getElementById('sb-fmt').textContent = FMT_LBL[fmt];
+  document.getElementById('ch-badge').textContent =
+    fmt === 'propuesta' ? 'PROPUESTA' : fmt === 'email' ? 'EMAIL TÉCNICO' : 'TÉCNICO';
+
+  // Main response
+  const hasStruct = SECS.some(s => (parsed[s.k]||'').length > 25);
+  let rHTML = '';
+  if (hasStruct) {
+    for (const {k,em,lbl,color} of SECS) {
+      if (parsed[k]) {
+        rHTML += `<div class="sec-block">
+          <div class="sec-bar">
+            <span class="sec-em">${em}</span>
+            <span class="sec-lbl" style="color:${color}">${lbl}</span>
+          </div>
+          <div class="sec-text">${md(parsed[k])}</div>
+        </div>`;
+      }
+    }
+    if (parsed.lockin) {
+      rHTML += `<div class="lockin">
+        <div class="lockin-lbl">🔒 Argumento de Lock-in Técnico</div>
+        <div class="lockin-text">${md(parsed.lockin)}</div>
+      </div>`;
+    }
+  } else {
+    rHTML = `<div class="sec-text" style="font-size:.86rem;line-height:1.85;">${md(raw)}</div>`;
+  }
+  document.getElementById('res-body').innerHTML = rHTML;
+
+  // WhatsApp
+  const waText = buildWA(parsed, raw);
+  document.getElementById('wa-txt').textContent = waText;
+
+  // Product tab
+  const prods = PROD_DATA[area] || PROD_DATA['masterbatch'];
+  let pHTML = '';
+  for (const p of prods) {
+    pHTML += `<div class="prod-card">
+      <div class="pc-head">
+        <div class="pc-name">${p.nombre}</div>
+        <div class="pc-line">${p.linea}</div>
+      </div>
+      <div class="pc-body">
+        ${p.specs.map(([k,v])=>`<div class="pc-spec">
+          <div class="pc-spec-k">${k}</div>
+          <div class="pc-spec-v">${v}</div>
+        </div>`).join('')}
+        <div class="pc-just">${p.just}</div>
+      </div>
+    </div>`;
+  }
+  if (parsed.lockin) {
+    pHTML += `<div class="lockin">
+      <div class="lockin-lbl">🔒 Dependencia Técnica Generada</div>
+      <div class="lockin-text">${md(parsed.lockin)}</div>
+    </div>`;
+  }
+  document.getElementById('prod-body').innerHTML = pHTML;
+
+  // Action tab
+  const accs = [
+    { lbl:'Respuesta inmediata — HOY', txt:'Ajusta el nombre del cliente en el Script WhatsApp y envíalo. La respuesta técnica ya está lista. Nunca dejar pasar más de 2 horas una consulta técnica sin respuesta.' },
+    { lbl:'Seguimiento — 48 horas', txt:'Si el cliente responde con interés: proponer visita técnica de 30 min en planta o videollamada de diagnóstico en vivo. Objetivo: ver su proceso, documentar el problema con fotos.' },
+    { lbl:'Piloto técnico — 1 a 2 semanas', txt:'Proponer lote piloto de 50-100 kg del producto recomendado. Condiciones: pago anticipado, resultado documentado, informe técnico de campo firmado por Leistung. El piloto es el inicio del lock-in.' },
+    { lbl:'Contrato recurrente — 1 a 3 meses', txt:'Con resultados del piloto documentados: presentar propuesta de suministro mensual con precio garantizado, tiempo de entrega comprometido y soporte técnico incluido. Esto es la barrera de salida real del cliente.' },
+  ];
+  document.getElementById('steps').innerHTML = accs.map((a,i)=>`
+    <div class="step-row">
+      <div class="step-num">${i+1}</div>
+      <div>
+        <div class="step-lbl">${a.lbl}</div>
+        <div class="step-txt">${a.txt}</div>
+      </div>
+    </div>`).join('');
+}
+
+/* ════════════════════════════════════════════════════════════
+   WHATSAPP BUILDER
+════════════════════════════════════════════════════════════ */
+function buildWA(parsed, raw) {
+  // If no structure, use raw (already WhatsApp format)
+  const hasStruct = Object.values(parsed).some(v => v.length > 20);
+  if (!hasStruct) return raw;
+
+  const clean = t => t.replace(/\*\*/g,'').replace(/\*/g,'').replace(/`/g,'').trim();
+
+  const diag = clean(parsed.diagnostico||'').substring(0,220);
+  const sol  = clean(parsed.solucion||'').substring(0,220);
+  const rec  = clean(parsed.recomendacion||'').substring(0,180);
+
+  let wa = 'Hola [nombre], vi tu consulta y te cuento:\n\n';
+  if (diag) wa += diag + '\n\n';
+  if (sol)  wa += 'Lo que te recomiendo:\n' + sol + '\n\n';
+  if (rec)  wa += rec + '\n\n';
+  wa += '¿Te puedo enviar una muestra para que lo pruebes en tu proceso? ¿O cuándo te viene bien una llamada rápida de 15 minutos?';
+  return wa;
+}
+
+/* ════════════════════════════════════════════════════════════
+   COPY
+════════════════════════════════════════════════════════════ */
+function copyResp() {
+  navigator.clipboard.writeText(document.getElementById('res-body').innerText)
+    .then(()=>flashBtn(document.querySelector('.btn-copy'),'✓ Copiado','📋 Copiar Respuesta'));
+}
+function copyWA() {
+  navigator.clipboard.writeText(document.getElementById('wa-txt').textContent)
+    .then(()=>flashBtn(document.querySelector('.btn-copy2'),'✓ Copiado para WhatsApp','💬 Copiar para WhatsApp'));
+}
+function flashBtn(btn, ok, orig) {
+  if(!btn) return;
+  btn.textContent = ok;
+  setTimeout(()=>btn.textContent = orig, 2200);
+}
+
+/* ════════════════════════════════════════════════════════════
+   LOADING MESSAGES
+════════════════════════════════════════════════════════════ */
+const LMSGS = [
+  'Activando al formulador de masterbatch...',
+  'Consultando al ingeniero de extrusión...',
+  'Aplicando 40 años de experiencia industrial...',
+  'Analizando causa raíz con Six Sigma...',
+  'Construyendo la respuesta nivel director de planta...',
+  'Validando con el asesor comercial técnico...',
+  'Documentando la recomendación Leistung...',
+];
+let lInt;
+function startLMsgs() {
+  let i = 0;
+  document.getElementById('lmsg').textContent = LMSGS[0];
+  lInt = setInterval(()=>{ i=(i+1)%LMSGS.length; document.getElementById('lmsg').textContent=LMSGS[i]; }, 1900);
+}
+function stopLMsgs() { clearInterval(lInt); }
+
+/* ════════════════════════════════════════════════════════════
+   MAIN — API CALL
+════════════════════════════════════════════════════════════ */
+async function generar() {
+  S.q   = document.getElementById('inp-q').value.trim();
+  S.ctx = document.getElementById('inp-ctx').value.trim();
+  if (!S.q) return;
+
+  // UI: show loader
+  document.getElementById('empty').style.display  = 'none';
+  document.getElementById('results').classList.remove('on');
+  document.getElementById('loader').classList.add('on');
+  document.getElementById('btn-gen').disabled = true;
+  startLMsgs();
+
+  const userMsg = [
+    S.ctx ? `CONTEXTO DEL CLIENTE:\n${S.ctx}\n` : '',
+    `PREGUNTA DEL CLIENTE:\n"${S.q}"`,
+  ].filter(Boolean).join('\n');
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1600,
+        system: buildSys(),
+        messages: [{ role:'user', content: userMsg }],
+      }),
+    });
+
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data  = await res.json();
+    const raw   = data.content?.[0]?.text || '';
+    lastRaw = raw;
+
+    const parsed = parse(raw);
+
+    stopLMsgs();
+    document.getElementById('loader').classList.remove('on');
+    document.getElementById('results').classList.add('on');
+
+    renderRes(parsed, raw, S.area, S.fmt);
+    swTab('resp', document.querySelector('.tab'));
+    document.getElementById('right').scrollTo({ top:0, behavior:'smooth' });
+
+  } catch(err) {
+    stopLMsgs();
+    document.getElementById('loader').classList.remove('on');
+    document.getElementById('results').classList.add('on');
+    document.getElementById('res-body').innerHTML =
+      `<div class="err-box">⚠️ Error al conectar con el motor de IA.<br>
+      <small style="opacity:.6;margin-top:.35rem;display:block">Detalle: ${err.message}</small></div>`;
+  } finally {
+    document.getElementById('btn-gen').disabled = false;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════
+   KEYBOARD
+════════════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('inp-q').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) generar();
+  });
+});
+</script>
+</body>
+</html>
