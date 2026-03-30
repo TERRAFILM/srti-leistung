@@ -10,6 +10,15 @@
 /* ════════════════════════════════════════
    RESET & VARIABLES
 ════════════════════════════════════════ */
+
+#login-screen{position:fixed;inset:0;background:#0C1420;display:flex;align-items:center;justify-content:center;z-index:9999;}
+.login-card{background:#1A2535;border:1px solid rgba(201,168,76,.2);border-radius:16px;padding:2.5rem 2rem;width:100%;max-width:360px;text-align:center;box-shadow:0 20px 60px rgba(0,0,0,.6);}
+.login-logo{font-size:1.4rem;font-weight:700;color:#C9A84C;letter-spacing:1px;margin-bottom:.5rem;}
+.login-sub{font-size:.8rem;color:#4A5568;margin-bottom:2rem;}
+.login-input{width:100%;padding:.75rem 1rem;background:#0C1420;border:1px solid rgba(201,168,76,.3);border-radius:8px;color:#fff;font-size:1rem;outline:none;text-align:center;letter-spacing:2px;margin-bottom:1rem;}
+.login-btn{width:100%;padding:.8rem;background:#C9A84C;border:none;border-radius:8px;color:#0C1420;font-weight:700;font-size:1rem;cursor:pointer;}
+.login-btn:hover{background:#E8C96A;}
+.login-error{color:#FC8181;font-size:.8rem;margin-top:.5rem;display:none;}
 *{box-sizing:border-box;margin:0;padding:0}
 html{scroll-behavior:smooth}
 
@@ -530,7 +539,7 @@ header{
 }
 </style>
 </head>
-<body>
+<body><div id="login-screen"><div class="login-card"><div class="login-logo">SRTI</div><div class="login-sub">Sistema de Respuesta Técnica Inteligente</div><input class="login-input" type="password" id="login-input" placeholder="Contraseña" onkeydown="if(event.key==='Enter')doLogin()"><button class="login-btn" onclick="doLogin()">Ingresar al sistema</button><div class="login-error" id="login-error">Contraseña incorrecta</div></div></div>
 
 <!-- ════════════ HEADER ════════════ -->
 <header>
@@ -1234,5 +1243,11 @@ document.addEventListener('DOMContentLoaded', () => {
   });
 });
 </script>
-</body>
+<script>
+function doLogin(){
+  var v=document.getElementById('login-input').value;
+  if(v==='WAnd1TABb'){document.getElementById('login-screen').style.display='none';}
+  else{var e=document.getElementById('login-error');e.style.display='block';setTimeout(function(){e.style.display='none';},2000);}
+}
+</script></body>
 </html>
