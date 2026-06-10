@@ -516,6 +516,35 @@ header{
   font-size:.82rem;color:#991B1B;line-height:1.7;
 }
 
+/* ── CHAT DE SEGUIMIENTO ── */
+.btn-afinar{display:none;width:100%;margin-top:.55rem;}
+.btn-afinar.on{display:block;}
+.chat-panel{display:none;margin-top:.85rem;}
+.chat-panel.on{display:block;}
+.chat-hilo{display:flex;flex-direction:column;gap:.6rem;margin-bottom:.85rem;max-height:420px;overflow-y:auto;padding-right:.25rem;}
+.chat-hilo:empty{display:none;}
+.burbuja{max-width:88%;padding:.7rem .9rem;border-radius:10px;font-size:.82rem;line-height:1.7;}
+.burbuja.user{align-self:flex-end;background:var(--navy);color:var(--cream);border-bottom-right-radius:3px;}
+.burbuja.assistant{align-self:flex-start;background:var(--cream-l);color:var(--navy);border:1px solid var(--border-gold);border-bottom-left-radius:3px;}
+.adj-tag{display:inline-block;background:var(--gold-dim);border:1px solid var(--border-gold);color:var(--gold);font-size:.62rem;font-weight:600;padding:.12rem .5rem;border-radius:10px;margin-bottom:.35rem;}
+.chat-status{display:none;align-items:center;gap:.5rem;font-size:.75rem;color:var(--steel);margin-bottom:.7rem;}
+.chat-status.on{display:flex;}
+.chat-spinner{width:16px;height:16px;border:2px solid rgba(201,168,76,.25);border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite;flex-shrink:0;}
+.chat-input-row{display:flex;gap:.5rem;align-items:flex-end;}
+.chat-ta{flex:1;background:var(--white);border:1px solid var(--border-gold);color:var(--navy);font-family:'DM Sans',sans-serif;font-size:.82rem;padding:.65rem .8rem;border-radius:8px;outline:none;resize:none;min-height:58px;line-height:1.6;transition:border-color .2s;}
+.chat-ta::placeholder{color:var(--steel);opacity:.55;}
+.chat-ta:focus{border-color:var(--gold);}
+.btn-adj{background:var(--cream-l);border:1px solid var(--border);color:var(--navy);font-size:1rem;padding:.6rem .7rem;border-radius:8px;cursor:pointer;transition:all .15s;}
+.btn-adj:hover{background:var(--gold-dim);border-color:var(--border-gold);}
+.btn-chat-send{background:var(--navy);color:var(--cream);border:none;font-family:'DM Sans',sans-serif;font-size:.73rem;font-weight:600;letter-spacing:.3px;text-transform:uppercase;padding:.72rem 1rem;border-radius:8px;cursor:pointer;transition:all .15s;}
+.btn-chat-send:hover{opacity:.85;}
+.btn-chat-send:disabled{opacity:.4;cursor:not-allowed;}
+.adj-chip{display:none;align-items:center;gap:.5rem;background:var(--gold-dim);border:1px solid var(--border-gold);border-radius:20px;padding:.3rem .8rem;font-size:.72rem;color:var(--navy);margin-bottom:.6rem;max-width:fit-content;}
+.adj-chip.on{display:flex;}
+.adj-chip-x{cursor:pointer;color:var(--steel);font-weight:700;border:none;background:none;font-size:.85rem;padding:0;}
+.adj-chip-x:hover{color:#991B1B;}
+.chat-hint{font-size:.62rem;color:var(--steel);opacity:.7;margin-top:.35rem;text-align:right;}
+
 /* ════════════════════════════════════════
    PRINT
 ════════════════════════════════════════ */
@@ -524,6 +553,7 @@ header{
   .shell{display:block}
   .right{padding:1rem}
   .tabs,.act-row{display:none!important}
+  .btn-afinar,.chat-panel{display:none!important}
   .tab-pane{display:block!important}
   .card{box-shadow:none;border:1px solid #ddd}
 }
@@ -709,6 +739,33 @@ Ej: 'Tengo mucha presión en el cabezal y se me cae el globo, ¿qué hago?'"></t
           <button class="btn-act btn-copy" onclick="copyResp()">📋 Copiar Respuesta</button>
           <button class="btn-act btn-print" onclick="window.print()">🖨 Imprimir</button>
         </div>
+
+        <!-- ── CHAT DE SEGUIMIENTO ── -->
+        <button class="btn-act btn-copy btn-afinar" id="btn-afinar" onclick="toggleChat()">💬 Afinar recomendación</button>
+        <div class="chat-panel" id="chat-panel">
+          <div class="card">
+            <div class="card-head">
+              <span class="ch-icon">💬</span>
+              <span class="ch-title">Chat de Seguimiento — Mismo Experto</span>
+              <span class="ch-badge">MEMORIA ACTIVA</span>
+            </div>
+            <div class="card-body">
+              <div class="chat-hilo" id="chat-hilo"></div>
+              <div class="chat-status" id="chat-status"><div class="chat-spinner"></div>Analizando...</div>
+              <div class="adj-chip" id="adj-chip">
+                <span>📎 <span id="adj-name"></span></span>
+                <button class="adj-chip-x" onclick="quitarAdjunto()" title="Quitar adjunto">✕</button>
+              </div>
+              <div class="chat-input-row">
+                <button class="btn-adj" onclick="document.getElementById('chat-file').click()" title="Adjuntar imagen o PDF">📎</button>
+                <input type="file" id="chat-file" accept="image/png,image/jpeg,image/webp,application/pdf" style="display:none" onchange="cargarAdjunto(this)">
+                <textarea class="chat-ta" id="chat-ta" placeholder="Repregunta al experto... Ej: ¿y si mi resina es LLDPE C6?"></textarea>
+                <button class="btn-chat-send" id="btn-chat-send" onclick="enviarRepregunta()">Enviar</button>
+              </div>
+              <div class="chat-hint">Ctrl+Enter para enviar · 📎 imagen o PDF, máx. 4 MB</div>
+            </div>
+          </div>
+        </div>
       </div>
 
       <!-- Tab: WhatsApp -->
@@ -768,6 +825,11 @@ Ej: 'Tengo mucha presión en el cabezal y se me cae el globo, ¿qué hago?'"></t
 let S = { area: '', fmt: 'whatsapp', q: '', ctx: '' };
 let lastRaw = '';
 
+/* Chat de seguimiento */
+let hiloConversacion = [];   // [0] user consulta original, [1] assistant respuesta inicial, luego repreguntas
+let systemActivo = '';       // system/rol experto usado en la generación inicial — se reinyecta en cada repregunta
+let adjuntoActual = null;    // { media_type, data(base64), name }
+
 /* ════════════════════════════════════════════════════════════
    EXAMPLES
 ════════════════════════════════════════════════════════════ */
@@ -814,6 +876,7 @@ function swTab(id, el) {
   document.getElementById('tab-'+id).classList.add('on');
 }
 function resetAll() {
+  hiloConversacion = []; systemActivo = ''; resetChatPanel();
   S = { area:'', fmt:'whatsapp', q:'', ctx:'' };
   document.getElementById('inp-q').value = '';
   document.getElementById('inp-ctx').value = '';
@@ -1190,6 +1253,10 @@ async function generar() {
   document.getElementById('btn-gen').disabled = true;
   startLMsgs();
 
+  // Chat de seguimiento: nueva generación = nuevo hilo
+  hiloConversacion = []; systemActivo = ''; resetChatPanel();
+
+  const sysPrompt = buildSys();
   const userMsg = [
     S.ctx ? `CONTEXTO DEL CLIENTE:\n${S.ctx}\n` : '',
     `PREGUNTA DEL CLIENTE:\n"${S.q}"`,
@@ -1202,7 +1269,7 @@ async function generar() {
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
         max_tokens: 1600,
-        system: buildSys(),
+        system: sysPrompt,
         messages: [{ role:'user', content: userMsg }],
       }),
     });
@@ -1211,6 +1278,14 @@ async function generar() {
     const data  = await res.json();
     const raw   = data.content?.[0]?.text || '';
     lastRaw = raw;
+
+    // Chat de seguimiento: sembrar hilo con la consulta original y la respuesta
+    systemActivo = sysPrompt;
+    hiloConversacion = [
+      { role:'user', content: userMsg },
+      { role:'assistant', content: raw },
+    ];
+    document.getElementById('btn-afinar').classList.add('on');
 
     const parsed = parse(raw);
 
@@ -1240,6 +1315,153 @@ async function generar() {
 document.addEventListener('DOMContentLoaded', () => {
   document.getElementById('inp-q').addEventListener('keydown', e => {
     if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) generar();
+  });
+});
+
+/* ════════════════════════════════════════════════════════════
+   CHAT DE SEGUIMIENTO — memoria + rol persistente + adjuntos
+════════════════════════════════════════════════════════════ */
+function resetChatPanel() {
+  document.getElementById('btn-afinar').classList.remove('on');
+  document.getElementById('chat-panel').classList.remove('on');
+  document.getElementById('chat-hilo').innerHTML = '';
+  document.getElementById('chat-ta').value = '';
+  document.getElementById('chat-status').classList.remove('on');
+  document.getElementById('btn-chat-send').disabled = false;
+  quitarAdjunto();
+}
+
+function toggleChat() {
+  const panel = document.getElementById('chat-panel');
+  panel.classList.toggle('on');
+  if (panel.classList.contains('on')) document.getElementById('chat-ta').focus();
+}
+
+function esc(t) {
+  const d = document.createElement('div');
+  d.textContent = t;
+  return d.innerHTML;
+}
+
+function renderHilo() {
+  const cont = document.getElementById('chat-hilo');
+  let html = '';
+  // Desde [2]: la consulta original y la respuesta inicial ya se muestran arriba
+  for (let i = 2; i < hiloConversacion.length; i++) {
+    const m = hiloConversacion[i];
+    let texto = '', adj = '';
+    if (typeof m.content === 'string') {
+      texto = m.content;
+    } else {
+      for (const b of m.content) {
+        if (b.type === 'text') texto = b.text;
+        else if (b.type === 'image') adj = '📎 Imagen adjunta';
+        else if (b.type === 'document') adj = '📎 PDF adjunto';
+      }
+    }
+    const cuerpo = m.role === 'assistant' ? md(texto) : esc(texto).replace(/\n/g,'<br>');
+    html += `<div class="burbuja ${m.role}">${adj ? `<span class="adj-tag">${adj}</span><br>` : ''}${cuerpo}</div>`;
+  }
+  cont.innerHTML = html;
+  cont.scrollTop = cont.scrollHeight;
+}
+
+/* ── Adjuntos 📎 ── */
+const ADJ_TIPOS = ['image/png','image/jpeg','image/webp','application/pdf'];
+const ADJ_MAX = 4 * 1024 * 1024; // 4 MB
+
+function cargarAdjunto(input) {
+  const f = input.files[0];
+  input.value = '';
+  if (!f) return;
+  if (!ADJ_TIPOS.includes(f.type)) {
+    alert('Formato no soportado. Usa PNG, JPEG, WebP o PDF.');
+    return;
+  }
+  if (f.size > ADJ_MAX) {
+    alert('El archivo "' + f.name + '" pesa ' + (f.size/1024/1024).toFixed(1) + ' MB y excede el límite de 4 MB. Reduce o comprime el archivo e intenta de nuevo.');
+    return;
+  }
+  const r = new FileReader();
+  r.onload = () => {
+    adjuntoActual = { media_type: f.type, data: r.result.split(',')[1], name: f.name };
+    document.getElementById('adj-name').textContent = f.name;
+    document.getElementById('adj-chip').classList.add('on');
+  };
+  r.readAsDataURL(f);
+}
+
+function quitarAdjunto() {
+  adjuntoActual = null;
+  document.getElementById('adj-chip').classList.remove('on');
+  document.getElementById('chat-file').value = '';
+}
+
+/* ── Envío de repregunta con memoria ── */
+async function enviarRepregunta() {
+  const ta = document.getElementById('chat-ta');
+  const texto = ta.value.trim();
+  if (!texto || !hiloConversacion.length) return;
+
+  const adj = adjuntoActual;
+  let content;
+  if (adj) {
+    const bloque = adj.media_type === 'application/pdf'
+      ? { type:'document', source:{ type:'base64', media_type:'application/pdf', data: adj.data } }
+      : { type:'image',    source:{ type:'base64', media_type: adj.media_type,   data: adj.data } };
+    content = [bloque, { type:'text', text: texto }];
+  } else {
+    content = texto;
+  }
+
+  hiloConversacion.push({ role:'user', content });
+  ta.value = '';
+  quitarAdjunto();
+  renderHilo();
+
+  const btn = document.getElementById('btn-chat-send');
+  const status = document.getElementById('chat-status');
+  btn.disabled = true;
+  status.classList.add('on');
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-6',
+        max_tokens: 2000,
+        system: systemActivo,
+        messages: hiloConversacion,
+      }),
+    });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const data = await res.json();
+    const raw = data.content?.[0]?.text || '';
+    hiloConversacion.push({ role:'assistant', content: raw });
+    renderHilo();
+  } catch (err) {
+    // No corromper el hilo: sacar el user fallido y restaurar texto/adjunto para reintentar
+    hiloConversacion.pop();
+    renderHilo();
+    document.getElementById('chat-hilo').insertAdjacentHTML('beforeend',
+      `<div class="err-box">⚠️ No se pudo enviar la repregunta. Intenta de nuevo.<br>
+      <small style="opacity:.6;margin-top:.35rem;display:block">Detalle: ${esc(err.message)}</small></div>`);
+    ta.value = texto;
+    if (adj) {
+      adjuntoActual = adj;
+      document.getElementById('adj-name').textContent = adj.name;
+      document.getElementById('adj-chip').classList.add('on');
+    }
+  } finally {
+    btn.disabled = false;
+    status.classList.remove('on');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('chat-ta').addEventListener('keydown', e => {
+    if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); enviarRepregunta(); }
   });
 });
 </script>
