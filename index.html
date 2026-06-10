@@ -478,6 +478,14 @@ header{
   line-height:1.65;margin-top:.7rem;
   padding-top:.6rem;border-top:1px solid var(--border);
 }
+.prod-otros{margin-top:.85rem;border-top:1px solid var(--border);padding-top:.75rem;}
+.prod-otros summary{
+  cursor:pointer;font-size:.68rem;font-weight:600;
+  letter-spacing:1.2px;text-transform:uppercase;
+  color:var(--steel);margin-bottom:.6rem;user-select:none;
+}
+.prod-otros summary:hover{color:var(--gold);}
+.prod-otros .prod-card{margin-top:.6rem;}
 
 /* ── ACTION TAB ── */
 .steps{display:flex;flex-direction:column;gap:.55rem;}
@@ -920,12 +928,12 @@ FORMATO WHATSAPP — REGLAS ESTRICTAS:
 - Terminar SIEMPRE con una pregunta que invite a continuar (visita técnica, envío de muestra, llamada de 15 min).`,
     email:`
 FORMATO EMAIL TÉCNICO:
-- Usa la estructura completa de 5 secciones con sus headers (###).
+- Usa todas las secciones de la ESTRUCTURA OBLIGATORIA con sus headers (###).
 - Tono formal pero accesible. Incluye especificaciones numéricas.
 - 400-600 palabras. Termina con propuesta concreta de siguiente paso.`,
     propuesta:`
 FORMATO PROPUESTA COMERCIAL:
-- Usa estructura completa de 5 secciones + LOCK-IN.
+- Usa todas las secciones de la ESTRUCTURA OBLIGATORIA, incluyendo LOCK-IN.
 - Incluye argumento ROI cuantificado (cuánto pierde el cliente sin resolver esto vs cuánto cuesta el producto Leistung).
 - Menciona producto Leistung específico con código o referencia.
 - Cierra con propuesta de lote piloto. 600-900 palabras.`,
@@ -986,6 +994,12 @@ ESTRUCTURA OBLIGATORIA (usar siempre estos headers exactos con el emoji):
 ### ✅ RECOMENDACIÓN LEISTUNG
 [Producto/servicio Leistung específico con código/nombre + cómo validar — muestra, piloto, análisis]
 
+### 🧪 PRODUCTO APLICABLE
+[SI un producto del portafolio resuelve directamente el caso: nombre + código + 3-4 specs clave en formato "CAMPO: valor" + 1 párrafo de por qué aplica a ESTE caso. SI NINGÚN producto aplica: titular "Servicio Técnico Leistung" + specs del servicio (qué incluye: visita de diagnóstico, protocolo de pruebas, análisis laboratorio UdG Polímeros, informe firmado) + por qué el servicio es la entrada correcta en este caso. NUNCA listar productos genéricos del área que no resuelvan el caso concreto.]
+
+### ⚡ PLAN DE ACCIÓN
+[Exactamente 4 pasos numerados adaptados a ESTE caso, formato "PASO N — PLAZO: acción concreta". Paso 1 siempre: responder al cliente hoy. Pasos 2-4: secuencia comercial real del caso — si hay producto: muestra/piloto/contrato; si es servicio: agendar visita o protocolo de pruebas/informe/propuesta. Mantener filosofía MITOI y lock-in.]
+
 ### 🔒 LOCK-IN TÉCNICO
 [Por qué el cliente que trabaja con Leistung en este problema genera una barrera de salida real — dependencia técnica positiva]
 
@@ -1003,21 +1017,26 @@ REGLAS:
    PARSE RESPONSE
 ════════════════════════════════════════════════════════════ */
 function parse(txt) {
-  const out = { diagnostico:'', causaRaiz:'', solucion:'', impacto:'', recomendacion:'', lockin:'' };
+  const out = { diagnostico:'', causaRaiz:'', solucion:'', impacto:'', recomendacion:'', productoAplicable:'', planAccion:'', lockin:'' };
   const HEADS = [
     { k:'diagnostico',   marks:['🔍 DIAGNÓSTICO','DIAGNÓSTICO'] },
     { k:'causaRaiz',     marks:['⚙️ CAUSA RAÍZ','CAUSA RAÍZ'] },
     { k:'solucion',      marks:['🛠️ SOLUCIÓN TÉCNICA','SOLUCIÓN TÉCNICA','SOLUCIÓN'] },
     { k:'impacto',       marks:['📊 IMPACTO ESPERADO','IMPACTO ESPERADO','IMPACTO'] },
     { k:'recomendacion', marks:['✅ RECOMENDACIÓN LEISTUNG','RECOMENDACIÓN LEISTUNG','RECOMENDACIÓN'] },
+    { k:'productoAplicable', marks:['🧪 PRODUCTO APLICABLE','PRODUCTO APLICABLE'] },
+    { k:'planAccion',    marks:['⚡ PLAN DE ACCIÓN','PLAN DE ACCIÓN'] },
     { k:'lockin',        marks:['🔒 LOCK-IN TÉCNICO','LOCK-IN','LOCK-IN TÉCNICO'] },
   ];
   let cur = null;
   const collected = {};
   for (const line of txt.split('\n')) {
+    // Solo cuenta como header una línea que EMPIEZA con el marcador (tras #, * o espacios);
+    // un match por substring en medio del texto (ej. "visita de diagnóstico") corrompe las secciones.
+    const lt = line.trim().toUpperCase().replace(/^[#*\s]+/, '');
     let hit = false;
     for (const {k, marks} of HEADS) {
-      if (marks.some(m => line.toUpperCase().includes(m.toUpperCase()))) {
+      if (marks.some(m => lt.startsWith(m.toUpperCase()))) {
         cur = k; collected[k] = []; hit = true; break;
       }
     }
@@ -1100,6 +1119,36 @@ const PROD_DATA = {
   ],
 };
 
+function prodCardHTML(p) {
+  return `<div class="prod-card">
+      <div class="pc-head">
+        <div class="pc-name">${p.nombre}</div>
+        <div class="pc-line">${p.linea}</div>
+      </div>
+      <div class="pc-body">
+        ${p.specs.map(([k,v])=>`<div class="pc-spec">
+          <div class="pc-spec-k">${k}</div>
+          <div class="pc-spec-v">${v}</div>
+        </div>`).join('')}
+        <div class="pc-just">${p.just}</div>
+      </div>
+    </div>`;
+}
+
+function parsePlanAccion(txt) {
+  if (!txt) return [];
+  const pasos = [];
+  for (const lineaRaw of txt.split('\n')) {
+    const linea = lineaRaw.replace(/\*\*/g,'').replace(/^[-•\s]+/,'').trim();
+    if (!linea) continue;
+    if (!/^(\d+[.)]\s*)?PASO\s*\d/i.test(linea) && !/^\d+[.)]/.test(linea)) continue;
+    const idx = linea.indexOf(':');
+    if (idx > 0) pasos.push({ lbl: linea.slice(0, idx).trim(), txt: linea.slice(idx+1).trim() });
+    else pasos.push({ lbl: 'Paso ' + (pasos.length+1), txt: linea });
+  }
+  return pasos;
+}
+
 function renderRes(parsed, raw, area, fmt) {
   // Summary bar
   document.getElementById('sb-area').textContent = AREA_LBL[area] || 'General';
@@ -1137,23 +1186,21 @@ function renderRes(parsed, raw, area, fmt) {
   const waText = buildWA(parsed, raw);
   document.getElementById('wa-txt').textContent = waText;
 
-  // Product tab
-  const prods = PROD_DATA[area] || PROD_DATA['masterbatch'];
+  // Product tab — producto aplicable del modelo; catálogo del área como fallback
+  const prodTxt = (parsed.productoAplicable || '').trim();
   let pHTML = '';
-  for (const p of prods) {
-    pHTML += `<div class="prod-card">
-      <div class="pc-head">
-        <div class="pc-name">${p.nombre}</div>
-        <div class="pc-line">${p.linea}</div>
-      </div>
-      <div class="pc-body">
-        ${p.specs.map(([k,v])=>`<div class="pc-spec">
-          <div class="pc-spec-k">${k}</div>
-          <div class="pc-spec-v">${v}</div>
-        </div>`).join('')}
-        <div class="pc-just">${p.just}</div>
-      </div>
-    </div>`;
+  if (prodTxt.length > 25) {
+    pHTML += `<div class="sec-text" style="font-size:.84rem;line-height:1.8;">${md(prodTxt)}</div>`;
+    const catalogo = PROD_DATA[area];
+    if (catalogo) {
+      pHTML += `<details class="prod-otros">
+        <summary>📦 Otros productos del área</summary>
+        ${catalogo.map(prodCardHTML).join('')}
+      </details>`;
+    }
+  } else {
+    const prods = PROD_DATA[area] || PROD_DATA['masterbatch'];
+    pHTML += prods.map(prodCardHTML).join('');
   }
   if (parsed.lockin) {
     pHTML += `<div class="lockin">
@@ -1163,14 +1210,16 @@ function renderRes(parsed, raw, area, fmt) {
   }
   document.getElementById('prod-body').innerHTML = pHTML;
 
-  // Action tab
+  // Action tab — pasos del modelo; accs fijo como fallback
   const accs = [
     { lbl:'Respuesta inmediata — HOY', txt:'Ajusta el nombre del cliente en el Script WhatsApp y envíalo. La respuesta técnica ya está lista. Nunca dejar pasar más de 2 horas una consulta técnica sin respuesta.' },
     { lbl:'Seguimiento — 48 horas', txt:'Si el cliente responde con interés: proponer visita técnica de 30 min en planta o videollamada de diagnóstico en vivo. Objetivo: ver su proceso, documentar el problema con fotos.' },
     { lbl:'Piloto técnico — 1 a 2 semanas', txt:'Proponer lote piloto de 50-100 kg del producto recomendado. Condiciones: pago anticipado, resultado documentado, informe técnico de campo firmado por Leistung. El piloto es el inicio del lock-in.' },
     { lbl:'Contrato recurrente — 1 a 3 meses', txt:'Con resultados del piloto documentados: presentar propuesta de suministro mensual con precio garantizado, tiempo de entrega comprometido y soporte técnico incluido. Esto es la barrera de salida real del cliente.' },
   ];
-  document.getElementById('steps').innerHTML = accs.map((a,i)=>`
+  const pasosModelo = parsePlanAccion(parsed.planAccion);
+  const pasos = pasosModelo.length >= 2 ? pasosModelo : accs;
+  document.getElementById('steps').innerHTML = pasos.map((a,i)=>`
     <div class="step-row">
       <div class="step-num">${i+1}</div>
       <div>
@@ -1269,7 +1318,7 @@ async function generar() {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-6',
-        max_tokens: 1600,
+        max_tokens: 2200,
         system: sysPrompt,
         messages: [{ role:'user', content: userMsg }],
       }),
